@@ -1,6 +1,6 @@
 # What does it do?
 
-Ability to convert a particular file with AAC codec to WAV codec (or other compatible formats) with a hotkey. The clip under the playhead position gets converted and imported back into the media pool automatically. This is made possible with the Davinci Resolve scripts API.
+Extract audio in WAV codec (or other compatible formats) from a particular video with AAC codec, the .wav file is then imported back into the media pool, all with just a hotkey. The clip that is under the playhead gets converted.
 
 # Why
 
