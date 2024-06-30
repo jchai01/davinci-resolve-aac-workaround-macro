@@ -7,7 +7,7 @@ Ability to convert a particular file with AAC codec to WAV codec (or other compa
 AAC codec isn't supported on Linux due to some licensing nonsense. Before using this, just be aware other solution exist such as:
 
 - ffmpeg script to convert the entire directory to a compatible formats.
-- "smart folders" with incron: https://www.reddit.com/r/davinciresolve/comments/15ldzah/solution_to_the_mp4_h264_h265_issue_on_linux/
+- "smart folders" with incron: https://passthroughpo.st/painless-linux-video-production-part-3-organization-and-workflow/#:~:text=Auto%2DTranscode%20Your%20Footage
 
 I just don't think it's the best ultilization of disk space to convert every video as it duplicating the video portion. Extracting every audio file at once makes it hard to keep track which video and audio file goes together. Sometimes I don't need audio from all the clips too.
 
