@@ -9,7 +9,9 @@ AAC codec isn't supported on Linux due to some licensing nonsense. Before using 
 - ffmpeg script to convert the entire directory to a compatible formats.
 - "smart folders" with incron: https://passthroughpo.st/painless-linux-video-production-part-3-organization-and-workflow/#:~:text=Auto%2DTranscode%20Your%20Footage
 
-I just don't think it's the best ultilization of disk space to convert every video as it duplicating the video portion. Extracting every audio file at once makes it hard to keep track which video and audio file goes together. Sometimes I don't need audio from all the clips too.
+I just don't think it's the best ultilization of disk space to convert every video as it duplicates the video portion. Extracting every audio file at once makes it hard to keep track which video and audio file goes together. Sometimes I don't need audio from all the clips too.
+
+Useful for editing footage coming directly from smartphones as they are usually recorded in a mp4 container with H264/H265 video codec + AAC audio codec.
 
 # Setup/installation
 
@@ -31,9 +33,15 @@ export PYTHONPATH="$PYTHONPATH:$RESOLVE_SCRIPT_API/Modules/"
 4. You can also run the script under `workspaces > Scripts > Comp`, or set a hotkey.
 
 # Notes
+
 - Running external scripts is only available in studio version.
 - Tested in Davinci Resolve Studio 19 Beta 3
 - Davinci Resolve scripts API unofficial docs: https://deric.github.io/DaVinciResolve-API-Docs/
+
+# Known Issues
+
+- Hotkey set in Davinci keyboard shortcut page sometimes does not work during first startup. Run the script once under `workspaces > Scripts > Comp` and hotkey works subsequently, not sure why. To try: set hotkey at OS level.
+- Case sensitive for now, note the `.mp4` and `.MP4` and change the script accordingly.
 
 # Future
 - Add checks to see if wav file exist. If exist, highlight/focus in media pool.
