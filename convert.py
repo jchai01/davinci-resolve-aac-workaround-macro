@@ -50,6 +50,12 @@ if outputClipName == None:
 
 mediaPool = resolve.GetProjectManager().GetCurrentProject().GetMediaPool()
 
+# if converted audio file already exist in outputDir, import it
+for i in os.listdir(outputDir):
+    if outputClipName == i:
+        mediaPool.ImportMedia(outputDir + outputClipName)
+        exit(0)
+
 
 def buildFFmpegCommand():
     commands_list = [
