@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 import DaVinciResolveScript as dvr_script
 import subprocess
-import time
 import os
 
 # where to store the output audio file, make sure the path exist (in this case, ~/temp)
@@ -49,12 +48,53 @@ if outputClipName == None:
     exit(1)
 
 mediaPool = resolve.GetProjectManager().GetCurrentProject().GetMediaPool()
+project = resolve.GetProjectManager().GetCurrentProject()
+timeline = project.GetCurrentTimeline()
 
-# if converted audio file already exist in outputDir, import it
-for i in os.listdir(outputDir):
-    if outputClipName == i:
-        mediaPool.ImportMedia(outputDir + outputClipName)
-        exit(0)
+
+def timecode_to_frames(timecode, fps):
+    """Convert timecode string to frame count"""
+    hours, minutes, seconds, frames = map(int, timecode.split(":"))
+    return ((hours * 3600) + (minutes * 60) + seconds) * fps + frames
+
+
+def add_audio_clip_at_playhead(audio_clip_name, audio_track=1):
+    # Get project framerate
+    fps = float(project.GetSetting("timelineFrameRate"))
+
+    # Find the audio clip in media pool
+    root_folder = mediaPool.GetRootFolder()
+    for clip in root_folder.GetClipList():
+        if clip.GetClipProperty("Clip Name") == audio_clip_name:
+
+            # Get current playhead position
+            playhead_timecode = timeline.GetCurrentTimecode()
+            playhead_frames = timecode_to_frames(playhead_timecode, fps)
+
+            end_frame = None
+            duration = clip.GetClipProperty("Duration")
+            if duration and duration.isdigit():
+                end_frame = int(duration) - 1
+
+            # Add to audio track (negative track numbers for audio)
+            mediaPool.AppendToTimeline(
+                [
+                    {
+                        "mediaPoolItem": clip,
+                        "startFrame": 0,  # Start from beginning of clip
+                        "endFrame": end_frame,
+                        "trackIndex": -abs(audio_track),
+                        "recordFrame": playhead_frames,  # Insert at playhead
+                    }
+                ]
+            )
+            print(
+                f"Added audio clip '{audio_clip_name}' to track A{audio_track} at {playhead_timecode}"
+            )
+            return True
+
+    print(f"Audio clip '{audio_clip_name}' not found in Media Pool")
+    return False
 
 
 def buildFFmpegCommand():
@@ -71,12 +111,17 @@ def buildFFmpegCommand():
 def runFFmpeg(commands):
     if subprocess.run(commands).returncode == 0:
         print("ffmpeg script ran successfully")
-
-        # import converted file to media pool
-        time.sleep(2)
-        mediaPool.ImportMedia(outputDir + outputClipName)
     else:
         print("Error running ffmpeg script")
 
 
+# if converted audio file already exist in outputDir, import it
+for i in os.listdir(outputDir):
+    if outputClipName == i:
+        mediaPool.ImportMedia(outputDir + outputClipName)
+        add_audio_clip_at_playhead(outputClipName, audio_track=1)
+        exit(0)
+
 runFFmpeg(buildFFmpegCommand())
+mediaPool.ImportMedia(outputDir + outputClipName)
+add_audio_clip_at_playhead(outputClipName, audio_track=1)
