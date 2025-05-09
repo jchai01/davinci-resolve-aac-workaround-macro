@@ -2,6 +2,8 @@
 
 It transcodes specific footages on the fly while remaining in Resolve. It extracts audio in WAV codec from a particular footage with AAC codec, the .wav file is then imported into the media pool and inserted into the timeline at the playhead position, all with just a hotkey. The clip that is under the playhead gets converted.
 
+Demo: https://youtu.be/TIxvbon6Ths
+
 # Why?
 
 Somehow AAC codec isn't supported on Linux, even with the Studio version. Before using this, be aware that other solution exist such as:
@@ -13,7 +15,9 @@ This script is useful for dealing with footages coming from smartphones as they 
 
 # Setup/installation
 
-1. Activate Davinci Resolve scripts API, add required environment variables with `sudoedit /etc/profile`. Add the following line at the end of the file:
+1. Prerequisites: Install Davinci Resolve Studio & FFMPEG
+
+2. Activate Davinci Resolve scripts API, add required environment variables with `sudoedit /etc/profile`. Add the following line at the end of the file:
 
 ```bash
 export RESOLVE_SCRIPT_API="/opt/resolve/Developer/Scripting"
@@ -21,15 +25,16 @@ export RESOLVE_SCRIPT_LIB="/opt/resolve/libs/Fusion/fusionscript.so"
 export PYTHONPATH="$PYTHONPATH:$RESOLVE_SCRIPT_API/Modules/"
 ```
 
-2. The code in `convert.py` needs to be placed in `/opt/resolve/Fusion/Scripts/Comp`, it can be done using symlinks:
+3. `convert.py` file needs to be placed in `/opt/resolve/Fusion/Scripts/Comp`, it can be done using symlinks:
 
 ```bash
 git clone https://github.com/jchai01/davinci-resolve-aac-workaround-macro.git
 cd davinci-resolve-aac-workaround-macro
+sudo chmod +x convert.py
 sudo ln -sf $(pwd)/convert.py /opt/resolve/Fusion/Scripts/Comp/
 ```
 
-3. Set variables in `convert.py` script if applicable. Default output directory: `~/temp`, default ffmpeg binary path:`/usr/bin/ffmpeg`. Don't forget the trailing `/` at the end for the output directory.
+4. Set variables in `convert.py` script (if applicable). Default output directory (make sure it exist too): `~/temp`. Default FFMPEG binary path:`/usr/bin/ffmpeg`. Don't forget the trailing `/` at the end for the output directory.
 
 # Usage
 
@@ -38,16 +43,14 @@ sudo ln -sf $(pwd)/convert.py /opt/resolve/Fusion/Scripts/Comp/
 3. Open the terminal and run `python /opt/resolve/Fusion/Scripts/Comp/convert.sh` to ensure it is working.
 4. You can also run the script under `workspaces > Scripts > Comp`, or set a hotkey (mine is `ctrl+h`).
 
+# Known Issues
+
+- Hotkey set in Davinci keyboard shortcut page sometimes does not work during first startup. Run the script once under `workspaces > Scripts > Comp` and hotkey works subsequently, not sure why.
+- The clip has to be in video track 1 with no other videos on top of it, disabled videos on top are fine.
+
 # Notes
 
 - Running external scripts is only available in studio version.
 - Tested in Davinci Resolve Studio 19 Beta 3
 - Davinci Resolve scripts API unofficial docs: https://deric.github.io/DaVinciResolve-API-Docs/
-
-# Known Issues
-
-- Hotkey set in Davinci keyboard shortcut page sometimes does not work during first startup. Run the script once under `workspaces > Scripts > Comp` and hotkey works subsequently, not sure why.
-
-# More Resources
-
-https://jchai01.github.io/posts/davinci-comprehensive-guide-linux/
+- More resource: https://jchai01.github.io/posts/davinci-comprehensive-guide-linux/
