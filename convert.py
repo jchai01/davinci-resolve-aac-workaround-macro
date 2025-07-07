@@ -32,6 +32,7 @@ for item in track_items.values():
     media_pool_item = item.GetMediaPoolItem()
     if clipName == media_pool_item.GetClipProperty("File Path").split("/")[-1]:
         full_file_path = media_pool_item.GetClipProperty("File Path")
+        break
 if full_file_path == None:
     print("Unable to get full file path of video")
     exit(1)
