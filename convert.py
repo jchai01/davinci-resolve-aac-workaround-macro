@@ -71,11 +71,7 @@ def add_audio_clip_at_playhead(audio_clip_name, audio_track=1):
             # Get current playhead position
             playhead_timecode = timeline.GetCurrentTimecode()
             playhead_frames = timecode_to_frames(playhead_timecode, fps)
-
-            end_frame = None
             duration = clip.GetClipProperty("Duration")
-            if duration and duration.isdigit():
-                end_frame = int(duration) - 1
 
             # Add to audio track (negative track numbers for audio)
             mediaPool.AppendToTimeline(
@@ -83,12 +79,17 @@ def add_audio_clip_at_playhead(audio_clip_name, audio_track=1):
                     {
                         "mediaPoolItem": clip,
                         "startFrame": 0,  # Start from beginning of clip
-                        "endFrame": end_frame,
+                        "endFrame": duration,
                         "trackIndex": -abs(audio_track),
                         "recordFrame": playhead_frames,  # Insert at playhead
+                        # "recordFrame": playhead_timecode,  # works for all timeline settings/fps, but does not insert accurately at playhead
                     }
                 ]
             )
+
+            # set playhead back to where it was
+            timeline.SetCurrentTimecode(playhead_timecode)
+
             print(
                 f"Added audio clip '{audio_clip_name}' to track A{audio_track} at {playhead_timecode}"
             )
