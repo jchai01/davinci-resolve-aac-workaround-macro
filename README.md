@@ -47,7 +47,6 @@ sudo ln -sf $(pwd)/convert.py /opt/resolve/Fusion/Scripts/Comp/
 
 - Hotkey set in Davinci keyboard shortcut page sometimes does not work during first startup. Run the script once under `workspaces > Scripts > Comp` and hotkey works subsequently, not sure why.
 - The clip has to be in video track 1 with no other videos on top of it, disabled videos on top are fine.
-- Adding video transitions in video track 1 would cause the script to fail with `AttributeError: 'NoneType' object has no attribute 'GetClipProperty'`. A workaround is to move the video clips with transitions to another video track.
 
 # Notes
 
